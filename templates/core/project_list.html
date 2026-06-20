@@ -1,0 +1,47 @@
+{% extends 'core/base.html' %}
+{% block content %}
+
+<header class="page-header">
+    <div class="wrap reveal">
+        <span class="eyebrow">Our Work</span>
+        <h1 class="h-display" style="margin-top:14px;">Projects</h1>
+        <p class="lede" style="margin-top:16px;">A collection of residential, commercial and urban work, organised by category.</p>
+    </div>
+</header>
+
+<section>
+    <div class="wrap">
+        <div class="filter-row reveal">
+            <a href="{% url 'project_list' %}" class="filter-pill {% if not active_category %}active{% endif %}">All</a>
+            {% for value, label in categories %}
+            <a href="?category={{ value }}" class="filter-pill {% if active_category == value %}active{% endif %}">{{ label }}</a>
+            {% endfor %}
+        </div>
+
+        <div class="project-grid reveal-stagger">
+            {% for project in projects %}
+            <a href="{{ project.get_absolute_url }}" class="project-card tilt-card">
+                <div class="img-wrap">
+                    <span class="tag">{{ project.get_category_display }}</span>
+                    <img src="{{ project.cover_image.url }}" alt="{{ project.title }}">
+                </div>
+                <div class="meta">
+                    <h3>{{ project.title }}</h3>
+                    <span>{{ project.location }}{% if project.year %} · {{ project.year }}{% endif %} <span class="arrow">→</span></span>
+                </div>
+            </a>
+            {% empty %}
+            <p>No projects found in this category yet.</p>
+            {% endfor %}
+        </div>
+
+        {% if is_paginated %}
+        <div style="display:flex; justify-content:center; gap:14px; margin-top:60px;">
+            {% if page_obj.has_previous %}<a href="?page={{ page_obj.previous_page_number }}{% if active_category %}&category={{ active_category }}{% endif %}" class="btn">Previous</a>{% endif %}
+            {% if page_obj.has_next %}<a href="?page={{ page_obj.next_page_number }}{% if active_category %}&category={{ active_category }}{% endif %}" class="btn">Next</a>{% endif %}
+        </div>
+        {% endif %}
+    </div>
+</section>
+
+{% endblock %}

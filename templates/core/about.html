@@ -1,0 +1,147 @@
+{% extends 'core/base.html' %}
+{% block content %}
+
+<header class="page-header">
+    <div class="wrap reveal">
+        <span class="eyebrow">Who We Are</span>
+        <h1 class="h-display" style="margin-top:14px;">About {{ studio.name|default:"the Studio" }}</h1>
+        <p class="lede" style="margin-top:16px;">{{ studio.tagline|default:"A multi-disciplinary architecture and design practice." }}</p>
+    </div>
+</header>
+
+<section>
+    <div class="wrap" style="max-width:760px;">
+        <div class="reveal">
+            {{ studio.about_long|linebreaks|default:"Our studio brings together architects, interior designers and urban planners working from a shared belief: good design responds to context, climate and the people who'll actually use the space. Founded with a small team and a handful of residential commissions, we've grown into a practice trusted with commercial, institutional and large-scale urban work — without losing the attention to detail we started with." }}
+        </div>
+    </div>
+</section>
+
+<!-- STAT BAND -->
+<section class="section-dark">
+    <div class="wrap">
+        <div class="stat-band reveal-stagger">
+            <div><div class="num">{{ studio.projects_count|default:"120" }}+</div><div class="label">Projects</div></div>
+            <div><div class="num">{{ studio.cities_count|default:"9" }}</div><div class="label">Cities</div></div>
+            <div><div class="num">{{ studio.awards_count|default:"18" }}</div><div class="label">Awards</div></div>
+            <div><div class="num">{{ studio.founded_year|default:"2012" }}</div><div class="label">Founded</div></div>
+        </div>
+    </div>
+</section>
+
+<!-- VALUES -->
+<section>
+    <div class="wrap">
+        <span class="eyebrow reveal">What We Believe</span>
+        <h2 class="h-xl reveal" style="margin:14px 0 50px; max-width:600px;">Three ideas that shape every decision we make.</h2>
+        <div class="values-grid reveal-stagger">
+            <div class="premium-card">
+                <div class="img-wrap" style="aspect-ratio:16/10; background:var(--paper-soft); display:flex; align-items:center; justify-content:center;">
+                    <i class="fa-solid fa-mountain-sun" style="font-size:2.2rem; color:var(--accent);"></i>
+                </div>
+                <div class="body">
+                    <span class="badge">Context</span>
+                    <h4 class="h-md">Rooted in Place</h4>
+                    <p>Every site has a climate, a culture and a history — our designs start by listening to all three.</p>
+                </div>
+            </div>
+            <div class="premium-card">
+                <div class="img-wrap" style="aspect-ratio:16/10; background:var(--paper-soft); display:flex; align-items:center; justify-content:center;">
+                    <i class="fa-solid fa-layer-group" style="font-size:2.2rem; color:var(--accent);"></i>
+                </div>
+                <div class="body">
+                    <span class="badge">Material</span>
+                    <h4 class="h-md">Honest Materials</h4>
+                    <p>We choose materials for how they age, not just how they photograph on day one.</p>
+                </div>
+            </div>
+            <div class="premium-card">
+                <div class="img-wrap" style="aspect-ratio:16/10; background:var(--paper-soft); display:flex; align-items:center; justify-content:center;">
+                    <i class="fa-solid fa-people-roof" style="font-size:2.2rem; color:var(--accent);"></i>
+                </div>
+                <div class="body">
+                    <span class="badge">People</span>
+                    <h4 class="h-md">Designed for Use</h4>
+                    <p>A beautiful space that doesn't work for the people in it has failed — function always leads form.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- TIMELINE -->
+<section class="section-soft">
+    <div class="wrap">
+        <span class="eyebrow reveal">Our Journey</span>
+        <h2 class="h-xl reveal" style="margin:14px 0 50px; max-width:600px;">Milestones along the way.</h2>
+        <div class="timeline reveal-stagger" style="max-width:640px;">
+            <div class="timeline-item">
+                <div class="year">{{ studio.founded_year|default:"2012" }}</div>
+                <h4 class="h-md">Studio Founded</h4>
+                <p>Started with a single residential commission and a two-person team.</p>
+            </div>
+            <div class="timeline-item">
+                <div class="year">2016</div>
+                <h4 class="h-md">First Commercial Project</h4>
+                <p>Expanded into commercial and hospitality work across two cities.</p>
+            </div>
+            <div class="timeline-item">
+                <div class="year">2020</div>
+                <h4 class="h-md">Urban Planning Division</h4>
+                <p>Launched a dedicated masterplanning and urban design practice.</p>
+            </div>
+            <div class="timeline-item">
+                <div class="year">2024</div>
+                <h4 class="h-md">{{ studio.projects_count|default:"120" }}+ Projects</h4>
+                <p>Crossed {{ studio.projects_count|default:"120" }} completed projects across {{ studio.cities_count|default:"9" }} cities.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% if team_members %}
+<section>
+    <div class="wrap">
+        <span class="eyebrow reveal">Leadership</span>
+        <h2 class="h-lg reveal" style="margin:14px 0 36px;">The people guiding the practice.</h2>
+        <div class="team-grid reveal-stagger">
+            {% for member in team_members %}
+            <div class="team-card tilt-card" style="padding:18px;">
+                <div class="photo">{% if member.photo %}<img src="{{ member.photo.url }}" alt="{{ member.name }}">{% endif %}</div>
+                <h4>{{ member.name }}</h4>
+                <div class="role">{{ member.role }}</div>
+            </div>
+            {% endfor %}
+        </div>
+        <a href="{% url 'team' %}" class="btn" style="margin-top:30px;">Meet the Full Team</a>
+    </div>
+</section>
+{% endif %}
+
+{% if testimonials %}
+<section class="section-dark">
+    <div class="wrap">
+        <span class="eyebrow">Client Voices</span>
+        <h2 class="h-lg" style="margin:14px 0 40px;">What clients say.</h2>
+        <div class="slider" data-slider data-per-view="2">
+            <div class="slider-viewport">
+                <div class="slider-track">
+                    {% for t in testimonials %}
+                    <div class="testimonial-card tilt-card" style="width:calc(50% - 12px); min-width:280px; background:rgba(244,239,230,0.06); border-left-color:var(--accent);">
+                        <p class="quote" style="color:var(--paper);">"{{ t.quote }}"</p>
+                        <div class="who">{{ t.client_name }}{% if t.role_or_company %} · {{ t.role_or_company }}{% endif %}</div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="slider-controls">
+                <button class="slider-arrow slider-prev"><i class="fa-solid fa-arrow-left"></i></button>
+                <div class="slider-dots"></div>
+                <button class="slider-arrow slider-next"><i class="fa-solid fa-arrow-right"></i></button>
+            </div>
+        </div>
+    </div>
+</section>
+{% endif %}
+
+{% endblock %}

@@ -1,0 +1,71 @@
+{% extends 'core/base.html' %}
+{% block content %}
+
+<div class="detail-hero">
+    <img src="{{ project.cover_image.url }}" alt="{{ project.title }}">
+</div>
+
+<section style="padding-top:60px;">
+    <div class="wrap">
+        <span class="eyebrow reveal">{{ project.get_category_display }}</span>
+        <h1 class="h-display reveal" style="margin-top:16px;">{{ project.title }}</h1>
+
+        <div class="detail-meta reveal">
+            <div><div class="label">Location</div><div class="value">{{ project.location|default:"—" }}</div></div>
+            <div><div class="label">Year</div><div class="value">{{ project.year|default:"—" }}</div></div>
+            <div><div class="label">Client</div><div class="value">{{ project.client|default:"—" }}</div></div>
+            <div><div class="label">Area</div><div class="value">{{ project.area_sqft|default:"—" }}</div></div>
+        </div>
+
+        <div style="max-width:760px;" class="reveal">
+            <p class="lede" style="color:var(--ink);">{{ project.summary }}</p>
+            <p>{{ project.description|linebreaks }}</p>
+        </div>
+
+        {% if project.services.all %}
+        <div class="reveal" style="margin-top:30px;">
+            <span class="eyebrow">Services Involved</span>
+            <div style="display:flex; gap:10px; flex-wrap:wrap; margin-top:14px;">
+                {% for s in project.services.all %}
+                <a href="{{ s.get_absolute_url }}" class="filter-pill">{{ s.title }}</a>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+
+        {% if project.gallery.all %}
+        <div class="reveal" style="margin-top:50px;">
+            <span class="eyebrow">Project Gallery</span>
+            <div class="slider" data-slider data-per-view="2" style="margin-top:24px;">
+                <div class="slider-viewport">
+                    <div class="slider-track">
+                        {% for img in project.gallery.all %}
+                        <div style="width:calc(50% - 12px); min-width:280px;">
+                            <img src="{{ img.image.url }}" alt="{{ img.caption }}" style="width:100%; aspect-ratio:4/3; object-fit:cover; border-radius:10px;">
+                            {% if img.caption %}<p style="font-size:0.85rem; margin-top:10px;">{{ img.caption }}</p>{% endif %}
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                <div class="slider-controls">
+                    <button class="slider-arrow slider-prev"><i class="fa-solid fa-arrow-left"></i></button>
+                    <div class="slider-dots"></div>
+                    <button class="slider-arrow slider-next"><i class="fa-solid fa-arrow-right"></i></button>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</section>
+
+{% if next_project %}
+<section class="next-project">
+    <div class="wrap">
+        <span class="eyebrow" style="justify-content:center; color:#e3b08c;">Next Project</span>
+        <h2 class="h-xl" style="margin-top:14px;">{{ next_project.title }}</h2>
+        <a href="{{ next_project.get_absolute_url }}" class="btn btn-ghost-light">View Project →</a>
+    </div>
+</section>
+{% endif %}
+
+{% endblock %}

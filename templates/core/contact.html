@@ -1,0 +1,83 @@
+{% extends 'core/base.html' %}
+{% block content %}
+
+<header class="page-header">
+    <div class="wrap reveal">
+        <span class="eyebrow">Get In Touch</span>
+        <h1 class="h-display" style="margin-top:14px;">Let's build something.</h1>
+        <p class="lede" style="margin-top:16px;">Tell us a little about your project — we typically respond within one business day.</p>
+    </div>
+</header>
+
+<section>
+    <div class="wrap" style="display:grid; grid-template-columns:1fr 1.2fr; gap:60px;">
+        <div class="reveal">
+            {% if studio.address %}
+            <div style="margin-bottom:30px;">
+                <span class="eyebrow">Studio</span>
+                <p style="margin-top:10px;">{{ studio.address }}</p>
+            </div>
+            {% endif %}
+            {% if studio.email %}
+            <div style="margin-bottom:30px;">
+                <span class="eyebrow">Email</span>
+                <p style="margin-top:10px;"><a href="mailto:{{ studio.email }}">{{ studio.email }}</a></p>
+            </div>
+            {% endif %}
+            {% if studio.phone %}
+            <div style="margin-bottom:30px;">
+                <span class="eyebrow">Phone</span>
+                <p style="margin-top:10px;"><a href="tel:{{ studio.phone }}">{{ studio.phone }}</a></p>
+            </div>
+            {% endif %}
+            <div style="margin-bottom:30px;">
+                <span class="eyebrow">Office Hours</span>
+                <p style="margin-top:10px;">Mon – Sat, 9:30 AM – 6:30 PM</p>
+            </div>
+            {% if studio.map_embed_url %}
+            <iframe src="{{ studio.map_embed_url }}" width="100%" height="220" style="border:0; margin-top:10px; border-radius:10px;" loading="lazy"></iframe>
+            {% endif %}
+        </div>
+
+        <div class="reveal">
+            {% if messages %}
+                {% for message in messages %}
+                <div class="alert-success">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+            <form method="post">
+                {% csrf_token %}
+                {{ form.name }}
+                {{ form.email }}
+                {{ form.phone }}
+                {{ form.subject }}
+                {{ form.message }}
+                <button type="submit" class="btn btn-solid btn-magnetic" style="margin-top:10px;">Send Message</button>
+            </form>
+        </div>
+    </div>
+</section>
+
+<!-- FAQ -->
+<section class="section-soft">
+    <div class="wrap" style="max-width:760px;">
+        <span class="eyebrow reveal">Before You Reach Out</span>
+        <h2 class="h-xl reveal" style="margin:14px 0 40px;">A few quick answers.</h2>
+        <div class="faq-list reveal">
+            <div class="faq-item open">
+                <div class="faq-q"><span>What happens after I submit this form?</span><span class="plus">+</span></div>
+                <div class="faq-a"><p>A member of our team reviews every enquiry and replies within one business day with next steps.</p></div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-q"><span>Do you take on projects outside your home city?</span><span class="plus">+</span></div>
+                <div class="faq-a"><p>Yes, we've delivered projects across {{ studio.cities_count|default:"9" }} cities and regularly travel for site visits.</p></div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-q"><span>Is the first consultation free?</span><span class="plus">+</span></div>
+                <div class="faq-a"><p>Yes — the first call or meeting to understand your brief and site is complimentary.</p></div>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% endblock %}

@@ -1,0 +1,105 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script>
+        (function() {
+            var saved = localStorage.getItem('studio-theme');
+            var theme = saved || 'dark';
+            document.documentElement.setAttribute('data-theme', theme);
+        })();
+    </script>
+    <title>{% block title %}{{ studio.name|default:"Studio" }} — Architecture & Design{% endblock %}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400..700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/design.css' %}">
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+
+    <div class="cursor-glow"></div>
+    <div class="gradient-mesh"><span></span></div>
+
+    <nav class="site-nav">
+        <div class="wrap">
+            <a href="{% url 'home' %}" class="brand">{{ studio.name|default:"STUDIO" }}</a>
+            <ul class="nav-links">
+                <li><a href="{% url 'home' %}">Home</a></li>
+                <li><a href="{% url 'project_list' %}">Projects</a></li>
+                <li><a href="{% url 'service_list' %}">Services</a></li>
+                <li><a href="{% url 'team' %}">Team</a></li>
+                <li><a href="{% url 'about' %}">About</a></li>
+                <li><a href="{% url 'contact' %}">Contact</a></li>
+            </ul>
+            <div style="display:flex; align-items:center; gap:18px;">
+                <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme" title="Toggle theme">
+                    <i class="fa-solid fa-sun sun-icon"></i>
+                    <i class="fa-solid fa-moon moon-icon"></i>
+                </button>
+                <button class="nav-toggle" aria-label="Open menu">
+                    <span></span><span></span><span></span>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <div class="mobile-menu">
+        <span class="close-btn">&times;</span>
+        <a href="{% url 'home' %}">Home</a>
+        <a href="{% url 'project_list' %}">Projects</a>
+        <a href="{% url 'service_list' %}">Services</a>
+        <a href="{% url 'team' %}">Team</a>
+        <a href="{% url 'about' %}">About</a>
+        <a href="{% url 'contact' %}">Contact</a>
+    </div>
+
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer class="site-footer">
+        <div class="wrap">
+            <div class="footer-grid">
+                <div class="brand-block">
+                    <div class="brand">{{ studio.name|default:"STUDIO" }}</div>
+                    <p style="max-width:320px;">{{ studio.tagline|default:"A multi-disciplinary architecture and design practice." }}</p>
+                    <div class="social-row" style="margin-top:18px;">
+                        {% if studio.instagram %}<a href="{{ studio.instagram }}" target="_blank"><i class="fab fa-instagram"></i></a>{% endif %}
+                        {% if studio.linkedin %}<a href="{{ studio.linkedin }}" target="_blank"><i class="fab fa-linkedin"></i></a>{% endif %}
+                        {% if studio.facebook %}<a href="{{ studio.facebook }}" target="_blank"><i class="fab fa-facebook"></i></a>{% endif %}
+                        {% if studio.behance %}<a href="{{ studio.behance }}" target="_blank"><i class="fab fa-behance"></i></a>{% endif %}
+                    </div>
+                </div>
+                <div>
+                    <h4>Explore</h4>
+                    <a href="{% url 'project_list' %}">Projects</a>
+                    <a href="{% url 'service_list' %}">Services</a>
+                    <a href="{% url 'team' %}">Team</a>
+                    <a href="{% url 'about' %}">About</a>
+                </div>
+                <div>
+                    <h4>Studio</h4>
+                    {% if studio.address %}<a href="#">{{ studio.address }}</a>{% endif %}
+                    {% if studio.phone %}<a href="tel:{{ studio.phone }}">{{ studio.phone }}</a>{% endif %}
+                    {% if studio.email %}<a href="mailto:{{ studio.email }}">{{ studio.email }}</a>{% endif %}
+                </div>
+                <div>
+                    <h4>Get Started</h4>
+                    <a href="{% url 'contact' %}">Start a Project →</a>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <span>&copy; {% now "Y" %} {{ studio.name|default:"Studio" }}. All rights reserved.</span>
+                <span>Crafted with care.</span>
+            </div>
+        </div>
+    </footer>
+
+    <script src="{% static 'js/main.js' %}"></script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

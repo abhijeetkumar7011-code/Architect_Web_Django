@@ -1,0 +1,99 @@
+{% extends 'core/base.html' %}
+{% block content %}
+
+<header class="page-header">
+    <div class="wrap reveal">
+        <span class="eyebrow">Capabilities</span>
+        <h1 class="h-display" style="margin-top:14px;">Services</h1>
+        <p class="lede" style="margin-top:16px;">From early concept to construction supervision — what we bring to every project, across every typology we work with.</p>
+    </div>
+</header>
+
+<section>
+    <div class="wrap">
+        <div class="service-list reveal-stagger">
+            {% for service in services %}
+            <a href="{{ service.get_absolute_url }}" class="service-row">
+                <span class="num">{{ forloop.counter|stringformat:"02d" }}</span>
+                <h3>{{ service.title }}</h3>
+                <span class="summary">{{ service.summary }}</span>
+                <span class="arrow">→</span>
+            </a>
+            {% empty %}
+            <p>No services added yet.</p>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- SERVICE CARDS -->
+<section class="section-soft">
+    <div class="wrap">
+        <span class="eyebrow reveal">A Closer Look</span>
+        <h2 class="h-xl reveal" style="margin:14px 0 50px; max-width:600px;">Each service, in detail.</h2>
+        <div class="project-grid reveal-stagger">
+            {% for service in services %}
+            <a href="{{ service.get_absolute_url }}" class="premium-card tilt-card">
+                <div class="img-wrap" style="aspect-ratio:4/3;">
+                    {% if service.cover_image %}<img src="{{ service.cover_image.url }}" alt="{{ service.title }}" style="width:100%; height:100%; object-fit:cover;">{% endif %}
+                </div>
+                <div class="body">
+                    <span class="badge">Service {{ forloop.counter|stringformat:"02d" }}</span>
+                    <h4 class="h-md">{{ service.title }}</h4>
+                    <p>{{ service.summary }}</p>
+                </div>
+            </a>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- PROCESS -->
+<section>
+    <div class="wrap">
+        <span class="eyebrow reveal">Engagement Model</span>
+        <h2 class="h-xl reveal" style="margin:14px 0 50px; max-width:600px;">How a project typically unfolds.</h2>
+        <div class="process-grid reveal-stagger">
+            <div class="process-step"><div class="step-num">01</div><h4>Brief & Site Visit</h4><p>We understand your needs, budget and the site constraints first-hand.</p></div>
+            <div class="process-step"><div class="step-num">02</div><h4>Concept Design</h4><p>Initial sketches and massing studies presented for feedback.</p></div>
+            <div class="process-step"><div class="step-num">03</div><h4>Detailed Drawings</h4><p>Structural, electrical and material drawings finalized for execution.</p></div>
+            <div class="process-step"><div class="step-num">04</div><h4>Execution Support</h4><p>Site visits and contractor coordination through to handover.</p></div>
+        </div>
+    </div>
+</section>
+
+<!-- FAQ -->
+<section class="section-soft">
+    <div class="wrap" style="max-width:760px;">
+        <span class="eyebrow reveal">Common Questions</span>
+        <h2 class="h-xl reveal" style="margin:14px 0 40px;">Frequently asked.</h2>
+        <div class="faq-list reveal">
+            <div class="faq-item open">
+                <div class="faq-q"><span>How long does a typical residential project take?</span><span class="plus">+</span></div>
+                <div class="faq-a"><p>Depending on scale, a residential project usually runs 6-14 months from concept design to handover, including statutory approvals.</p></div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-q"><span>Do you handle government approvals and permits?</span><span class="plus">+</span></div>
+                <div class="faq-a"><p>Yes — our project management service includes liaison for building permits, environmental clearances and occupancy certificates.</p></div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-q"><span>Can you work with an existing structural consultant?</span><span class="plus">+</span></div>
+                <div class="faq-a"><p>Absolutely. We frequently collaborate with clients' existing structural, MEP and landscape consultants.</p></div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-q"><span>What's your fee structure?</span><span class="plus">+</span></div>
+                <div class="faq-a"><p>Fees are typically a percentage of project cost or a fixed fee for defined scopes — we'll share a clear proposal after the first consultation.</p></div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="cta-band">
+    <div class="wrap" style="max-width:680px;">
+        <span class="eyebrow" style="color:#e3b08c; justify-content:center;">Ready When You Are</span>
+        <h2 class="h-xl" style="margin:18px 0 30px;">Not sure which service you need?</h2>
+        <a href="{% url 'contact' %}" class="btn btn-accent btn-magnetic">Talk to Us</a>
+    </div>
+</section>
+
+{% endblock %}

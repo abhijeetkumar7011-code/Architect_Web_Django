@@ -1,0 +1,511 @@
+{% extends 'core/base.html' %}
+{% load static %}
+{% block content %}
+
+<!-- HERO -->
+<section class="hero" style="padding:0; margin:0;">
+    <div class="hero-media">
+        {% if featured_projects %}
+        <img src="{{ featured_projects.0.cover_image.url }}" alt="">
+        {% endif %}
+    </div>
+    <div class="hero-content wrap">
+        <span class="eyebrow">{{ studio.tagline|default:"Architecture · Interiors · Urban Design" }}</span>
+        <h1 class="h-display word-reveal">
+            <span style="animation-delay:.05s">We</span> <span style="animation-delay:.15s">design</span> <span
+                style="animation-delay:.25s">spaces</span><br>
+            <span style="animation-delay:.35s">that</span> <span class="text-gradient"
+                style="animation-delay:.45s">outlast</span> <span style="animation-delay:.55s">trends.</span>
+        </h1>
+        <p class="lede hero-lede">{{ studio.about_short|default:"A multi-disciplinary studio crafting residential, commercial and urban projects rooted in context, material honesty and quiet ambition." }}</p>
+        <div class="hero-cta-row">
+            <a href="{% url 'project_list' %}" class="btn btn-ghost-light">View Projects</a>
+            <a href="{% url 'contact' %}" class="btn btn-accent btn-magnetic">Start a Project</a>
+        </div>
+        <div class="hero-stats">
+            <div>
+                <div class="stat-num">{{ studio.projects_count|default:"120" }}+</div>
+                <div class="stat-label">Projects</div>
+            </div>
+            <div>
+                <div class="stat-num">{{ studio.awards_count|default:"18" }}</div>
+                <div class="stat-label">Awards</div>
+            </div>
+            <div>
+                <div class="stat-num">{{ studio.cities_count|default:"9" }}</div>
+                <div class="stat-label">Cities</div>
+            </div>
+            <div>
+                <div class="stat-num">{{ studio.founded_year|default:"2012" }}</div>
+                <div class="stat-label">Est.</div>
+            </div>
+        </div>
+    </div>
+    <div class="scroll-cue"><span class="line"></span>Scroll</div>
+</section>
+
+<!-- CATEGORY MARQUEE -->
+<div class="marquee">
+    <div class="marquee-track">
+        <span>Residential <i class="fa-solid fa-circle"></i> Commercial <i class="fa-solid fa-circle"></i> Interiors <i
+                class="fa-solid fa-circle"></i> Urban Planning <i class="fa-solid fa-circle"></i> Landscape <i
+                class="fa-solid fa-circle"></i> Institutional <i class="fa-solid fa-circle"></i></span>
+        <span>Residential <i class="fa-solid fa-circle"></i> Commercial <i class="fa-solid fa-circle"></i> Interiors <i
+                class="fa-solid fa-circle"></i> Urban Planning <i class="fa-solid fa-circle"></i> Landscape <i
+                class="fa-solid fa-circle"></i> Institutional <i class="fa-solid fa-circle"></i></span>
+    </div>
+</div>
+
+<!-- FEATURED PROJECTS -->
+<section class="featured-projects-section">
+    <div class="wrap">
+        <div class="section-head reveal fp-head">
+            <div class="fp-head-text">
+                <span class="eyebrow fp-eyebrow reveal">Selected Work</span>
+                <h2 class="h-xl fp-title">Recent projects shaping how people live and work.</h2>
+            </div>
+            <a href="{% url 'project_list' %}" class="btn-creative">
+                All Projects <span class="fp-arrow">→</span>
+            </a>
+        </div>
+
+        <div class="slider" data-slider data-per-view="3">
+            <div class="slider-viewport fp-viewport">
+                <div class="slider-track fp-track">
+                    {% for project in featured_projects %}
+                    <div class="project-slide fp-slide">
+                        <a href="{{ project.get_absolute_url }}" class="fancy-project-card">
+                            <div class="img-container">
+                                <div class="card-overlay"></div>
+                                <img src="{{ project.cover_image.url }}" alt="{{ project.title }}">
+                            </div>
+
+                            <span class="fancy-tag">{{ project.get_category_display }}</span>
+
+                            <div class="fancy-meta">
+                                <div class="fancy-meta-inner">
+                                    <h3>{{ project.title }}</h3>
+                                    <span class="fancy-meta-location">
+                                        {{ project.location }}{% if project.year %} · {{ project.year }}{% endif %}
+                                    </span>
+                                </div>
+
+                                <div class="fancy-action">
+                                    Explore Project
+                                    <span class="arrow-circle">
+                                        <span class="arrow-circle-glyph">→</span>
+                                    </span>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                    {% empty %}
+                    <div class="fp-empty">
+                        <p>No featured projects yet — add some from the admin panel.</p>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            {% if featured_projects %}
+            <div class="slider-controls fp-controls">
+                <button class="slider-arrow slider-prev" aria-label="Previous"><i class="fa-solid fa-arrow-left"></i></button>
+                <div class="slider-dots"></div>
+                <button class="slider-arrow slider-next" aria-label="Next"><i class="fa-solid fa-arrow-right"></i></button>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</section>
+
+<style>
+    /* ============ FEATURED PROJECTS — THEME-AWARE TOKENS ============ */
+    .featured-projects-section {
+        background: var(--paper, #f4efe6);
+        padding: clamp(56px, 9vw, 110px) 0;
+    }
+
+    .fp-head {
+        margin-bottom: clamp(32px, 5vw, 60px);
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+        flex-wrap: wrap;
+        gap: 24px;
+    }
+    .fp-head-text { max-width: 600px; }
+    .fp-eyebrow {
+        letter-spacing: 3px;
+        text-transform: uppercase;
+        font-size: 0.85rem;
+        color: var(--accent, #e3b08c);
+        display: block;
+        margin-bottom: 12px;
+    }
+    .fp-title {
+        margin: 0;
+        font-size: clamp(1.7rem, 4vw, 3rem);
+        font-weight: 300;
+        line-height: 1.2;
+        color: var(--text, var(--dark, #1a1a1a));
+    }
+
+    .btn-creative {
+        text-decoration: none;
+        padding: 12px 28px;
+        border: 1px solid var(--text, var(--dark, #1a1a1a));
+        border-radius: 50px;
+        font-size: 0.95rem;
+        color: var(--text, var(--dark, #1a1a1a));
+        transition: all 0.4s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        white-space: nowrap;
+    }
+    .fp-arrow { transform: rotate(-45deg); display: inline-block; }
+    .btn-creative:hover {
+        background: var(--text, var(--dark, #1a1a1a));
+        color: var(--paper, #fff);
+    }
+
+    .fp-viewport { overflow: hidden; margin: 0 -16px; padding: 20px 0; }
+    .fp-track { display: flex; gap: clamp(16px, 3vw, 32px); }
+
+    .fp-slide {
+        width: calc(33.333% - 22px);
+        min-width: 260px;
+        flex-shrink: 0;
+    }
+
+    .fancy-project-card {
+        display: block;
+        text-decoration: none;
+        position: relative;
+        border-radius: 16px;
+        overflow: hidden;
+        background: #1a1a1a;
+        aspect-ratio: 4/5;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.12);
+        transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+    }
+
+    .img-container { width: 100%; height: 100%; position: relative; overflow: hidden; }
+    .card-overlay {
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(to bottom, rgba(0,0,0,0) 35%, rgba(0,0,0,0.88) 100%);
+        z-index: 1;
+        transition: opacity 0.4s ease;
+    }
+    .img-container img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.8s cubic-bezier(0.25, 1, 0.5, 1);
+    }
+
+    .fancy-tag {
+        position: absolute;
+        top: 24px;
+        left: 24px;
+        z-index: 2;
+        background: rgba(255, 255, 255, 0.15);
+        color: #fff;
+        padding: 6px 16px;
+        border-radius: 50px;
+        font-size: 0.72rem;
+        text-transform: uppercase;
+        letter-spacing: 1.5px;
+        backdrop-filter: blur(8px);
+        border: 1px solid rgba(255,255,255,0.15);
+        transition: all 0.4s ease;
+    }
+
+    .fancy-meta {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        padding: clamp(20px, 3vw, 32px);
+        z-index: 2;
+        box-sizing: border-box;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+    }
+    .fancy-meta-inner {
+        transform: translateY(20px);
+        transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+    }
+    .fancy-meta-inner h3 {
+        font-size: clamp(1.15rem, 2vw, 1.6rem);
+        margin: 0 0 6px 0;
+        color: #ffffff;
+        font-weight: 400;
+        letter-spacing: -0.5px;
+        line-height: 1.2;
+    }
+    .fancy-meta-location {
+        font-size: 0.92rem;
+        color: #d8d4c6;
+        display: block;
+        opacity: 0.85;
+        font-weight: 300;
+    }
+
+    .fancy-action {
+        opacity: 0;
+        transform: translateY(15px);
+        transition: all 0.4s ease;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        color: var(--accent, #e3b08c);
+        font-size: 0.85rem;
+        font-weight: 500;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+    }
+    .arrow-circle {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        background: var(--accent, #e3b08c);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #1a1a1a;
+        flex-shrink: 0;
+    }
+    .arrow-circle-glyph { transform: rotate(-45deg); font-weight: bold; display: inline-block; font-size: 0.9rem; }
+
+    .fp-empty { padding: 0 16px; }
+    .fp-empty p { color: var(--text-muted, #706e64); }
+
+    .fp-controls { margin-top: 40px; display: flex; justify-content: center; gap: 14px; align-items: center; }
+    .fp-controls .slider-arrow {
+        background: transparent;
+        border: 1px solid var(--border, rgba(0,0,0,0.15));
+        color: var(--text, var(--dark, #1a1a1a));
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+        cursor: pointer;
+        transition: all 0.3s;
+    }
+
+    /* Hover states */
+    .fancy-project-card:hover { transform: translateY(-8px); }
+    .fancy-project-card:hover img { transform: scale(1.08); }
+    .fancy-project-card:hover .card-overlay {
+        background: linear-gradient(to bottom, rgba(0,0,0,0.2) 20%, rgba(0,0,0,0.95) 100%);
+    }
+    .fancy-project-card:hover .fancy-tag { background: #ffffff; color: #1a1a1a; }
+    .fancy-project-card:hover .fancy-meta-inner { transform: translateY(0); }
+    .fancy-project-card:hover .fancy-action { opacity: 1; transform: translateY(0); }
+    .fp-controls .slider-arrow:hover {
+        background: var(--text, var(--dark, #1a1a1a));
+        color: var(--paper, #fff);
+        border-color: var(--text, var(--dark, #1a1a1a));
+    }
+
+    /* ---- Dark theme override (assumes a [data-theme="dark"] or .dark on <html>/<body>) ---- */
+    [data-theme="dark"] .featured-projects-section,
+    html.dark .featured-projects-section {
+        background: var(--paper-dark, #15140f);
+    }
+    [data-theme="dark"] .fp-title,
+    html.dark .fp-title,
+    [data-theme="dark"] .btn-creative,
+    html.dark .btn-creative,
+    [data-theme="dark"] .fp-controls .slider-arrow,
+    html.dark .fp-controls .slider-arrow {
+        color: var(--text-dark, #f4efe6);
+        border-color: var(--text-dark, #f4efe6);
+    }
+    [data-theme="dark"] .btn-creative:hover,
+    html.dark .btn-creative:hover {
+        background: var(--text-dark, #f4efe6);
+        color: var(--paper-dark, #15140f);
+    }
+    [data-theme="dark"] .fp-empty p,
+    html.dark .fp-empty p {
+        color: var(--text-muted-dark, #a9a48f);
+    }
+
+    /* Hero spacing / CTA improvements */
+    .hero-lede { color: #d8d4c6; margin-top: 18px; max-width: 560px; }
+    .hero-cta-row { margin-top: 34px; display: flex; gap: 16px; flex-wrap: wrap; }
+
+    /* ============ RESPONSIVE BREAKPOINTS ============ */
+    @media (max-width: 1024px) {
+        .fp-slide { width: calc(50% - 16px); min-width: 280px; }
+    }
+
+    @media (max-width: 720px) {
+        .fp-head { align-items: flex-start; }
+        .fp-slide { width: 78%; min-width: 240px; }
+        .fancy-project-card { aspect-ratio: 4/4.6; }
+        .fp-viewport { margin: 0 -8px; }
+        .btn-creative { padding: 10px 22px; font-size: 0.88rem; }
+        .hero-cta-row .btn { width: 100%; text-align: center; }
+    }
+
+    @media (max-width: 480px) {
+        .fp-slide { width: 90%; }
+        .fancy-meta-inner { transform: translateY(0); }
+        .fancy-action { opacity: 1; transform: translateY(0); }
+    }
+</style>
+
+<!-- PROCESS -->
+<section class="section-soft">
+    <div class="wrap">
+        <span class="eyebrow reveal">How We Work</span>
+        <h2 class="h-xl reveal" style="margin:14px 0 50px; max-width:600px;">A process built for clarity at every stage.</h2>
+        <div class="process-grid reveal-stagger">
+            <div class="process-step">
+                <div class="step-num">01</div>
+                <h4>Discover</h4>
+                <p>Site visits, briefs and constraints — we listen before we draw.</p>
+            </div>
+            <div class="process-step">
+                <div class="step-num">02</div>
+                <h4>Design</h4>
+                <p>Concept sketches refined into detailed architectural drawings.</p>
+            </div>
+            <div class="process-step">
+                <div class="step-num">03</div>
+                <h4>Develop</h4>
+                <p>Structural, MEP and material coordination across disciplines.</p>
+            </div>
+            <div class="process-step">
+                <div class="step-num">04</div>
+                <h4>Deliver</h4>
+                <p>On-site supervision through to final handover and walkthrough.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- SERVICES -->
+<section>
+    <div class="wrap">
+        <div class="section-head reveal">
+            <div>
+                <span class="eyebrow">What We Do</span>
+                <h2 class="h-xl" style="margin-top:14px;">End-to-end design, from first sketch to final handover.</h2>
+            </div>
+            <a href="{% url 'service_list' %}" class="btn">All Services</a>
+        </div>
+
+        <div class="service-list reveal-stagger">
+            {% for service in services %}
+            <a href="{{ service.get_absolute_url }}" class="service-row">
+                <span class="num">{{ forloop.counter|stringformat:"02d" }}</span>
+                <h3>{{ service.title }}</h3>
+                <span class="summary">{{ service.summary }}</span>
+                <span class="arrow">→</span>
+            </a>
+            {% empty %}
+            <p>No services added yet.</p>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- STAT BAND -->
+<section class="section-dark">
+    <div class="wrap">
+        <div class="stat-band reveal-stagger">
+            <div>
+                <div class="num">{{ studio.projects_count|default:"120" }}+</div>
+                <div class="label">Projects Delivered</div>
+            </div>
+            <div>
+                <div class="num">{{ studio.cities_count|default:"9" }}</div>
+                <div class="label">Cities</div>
+            </div>
+            <div>
+                <div class="num">{{ studio.awards_count|default:"18" }}</div>
+                <div class="label">Awards Won</div>
+            </div>
+            <div>
+                <div class="num">{{ studio.founded_year|default:"2012" }}</div>
+                <div class="label">Founded</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- GALLERY SLIDER -->
+{% if gallery_images %}
+<section>
+    <div class="wrap reveal" style="margin-bottom:36px; display:flex; justify-content:space-between; align-items:flex-end; flex-wrap:wrap; gap:20px;">
+        <div>
+            <span class="eyebrow">Studio Life</span>
+            <h2 class="h-lg" style="margin-top:14px;">Behind the drawings.</h2>
+        </div>
+    </div>
+    <div class="wrap">
+        <div class="slider" data-slider data-per-view="4">
+            <div class="slider-viewport">
+                <div class="slider-track">
+                    {% for img in gallery_images %}
+                    <div style="width:calc(25% - 18px); min-width:220px; aspect-ratio:1/1; overflow:hidden; border-radius:10px;">
+                        <img src="{{ img.image.url }}" alt="{{ img.title }}" style="width:100%; height:100%; object-fit:cover;">
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="slider-controls">
+                <button class="slider-arrow slider-prev" aria-label="Previous"><i class="fa-solid fa-arrow-left"></i></button>
+                <div class="slider-dots"></div>
+                <button class="slider-arrow slider-next" aria-label="Next"><i class="fa-solid fa-arrow-right"></i></button>
+            </div>
+        </div>
+    </div>
+</section>
+{% endif %}
+
+<!-- TESTIMONIALS SLIDER -->
+{% if testimonials %}
+<section class="section-dark">
+    <div class="wrap">
+        <span class="eyebrow">Client Voices</span>
+        <h2 class="h-xl" style="margin-top:14px; margin-bottom:50px; max-width:600px;">Trusted by the people we've built for.</h2>
+        <div class="slider" data-slider data-per-view="2">
+            <div class="slider-viewport">
+                <div class="slider-track">
+                    {% for t in testimonials %}
+                    <div class="testimonial-card tilt-card" style="width:calc(50% - 12px); min-width:280px; background:rgba(244,239,230,0.06); border-left-color:var(--accent);">
+                        <p class="quote" style="color:var(--paper);">"{{ t.quote }}"</p>
+                        <div class="who">
+                            {{ t.client_name }}{% if t.role_or_company %} · {{ t.role_or_company }}{% endif %}
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="slider-controls">
+                <button class="slider-arrow slider-prev" aria-label="Previous"><i class="fa-solid fa-arrow-left"></i></button>
+                <div class="slider-dots"></div>
+                <button class="slider-arrow slider-next" aria-label="Next"><i class="fa-solid fa-arrow-right"></i></button>
+            </div>
+        </div>
+    </div>
+</section>
+{% endif %}
+
+<!-- CTA -->
+<section class="cta-band">
+    <div class="gradient-surface" style="position:absolute; inset:0; opacity:0.5;"></div>
+    <div class="wrap" style="max-width:720px; position:relative;">
+        <span class="eyebrow" style="color:#e3b08c; justify-content:center;"><span></span>Let's Talk</span>
+        <h2 class="h-xl" style="margin:18px 0 30px;">Have a site, a brief, or just an idea?</h2>
+        <a href="{% url 'contact' %}" class="btn btn-accent btn-magnetic">Get in Touch</a>
+    </div>
+</section>
+
+{% endblock %}

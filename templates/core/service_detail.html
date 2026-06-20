@@ -1,0 +1,42 @@
+{% extends 'core/base.html' %}
+{% block content %}
+
+<header class="page-header">
+    <div class="wrap reveal">
+        <span class="eyebrow">Service</span>
+        <h1 class="h-display" style="margin-top:14px;">{{ service.title }}</h1>
+        <p class="lede" style="margin-top:16px;">{{ service.summary }}</p>
+    </div>
+</header>
+
+<section>
+    <div class="wrap" style="display:grid; grid-template-columns:1.2fr 1fr; gap:60px;">
+        <div class="reveal">
+            <p>{{ service.description|linebreaks|default:"Detailed description coming soon." }}</p>
+            <a href="{% url 'contact' %}" class="btn btn-solid" style="margin-top:20px;">Discuss This Service</a>
+        </div>
+        {% if service.cover_image %}
+        <div class="reveal">
+            <img src="{{ service.cover_image.url }}" alt="{{ service.title }}" style="width:100%; aspect-ratio:4/3; object-fit:cover;">
+        </div>
+        {% endif %}
+    </div>
+
+    {% if related_projects %}
+    <div class="wrap" style="margin-top:80px;">
+        <span class="eyebrow reveal">Related Work</span>
+        <div class="project-grid reveal-stagger" style="margin-top:30px;">
+            {% for project in related_projects %}
+            <a href="{{ project.get_absolute_url }}" class="project-card tilt-card">
+                <div class="img-wrap">
+                    <img src="{{ project.cover_image.url }}" alt="{{ project.title }}">
+                </div>
+                <div class="meta"><h3>{{ project.title }}</h3><span>{{ project.location }}</span></div>
+            </a>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+</section>
+
+{% endblock %}
