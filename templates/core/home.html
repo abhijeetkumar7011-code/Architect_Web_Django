@@ -147,16 +147,16 @@
         font-size: clamp(1.7rem, 4vw, 3rem);
         font-weight: 300;
         line-height: 1.2;
-        color: var(--text, var(--dark, #1a1a1a));
+        color: var(--ink, #1a1a1a);
     }
 
     .btn-creative {
         text-decoration: none;
         padding: 12px 28px;
-        border: 1px solid var(--text, var(--dark, #1a1a1a));
+        border: 1px solid var(--ink, #1a1a1a);
         border-radius: 50px;
         font-size: 0.95rem;
-        color: var(--text, var(--dark, #1a1a1a));
+        color: var(--ink, #1a1a1a);
         transition: all 0.4s ease;
         display: inline-flex;
         align-items: center;
@@ -165,8 +165,8 @@
     }
     .fp-arrow { transform: rotate(-45deg); display: inline-block; }
     .btn-creative:hover {
-        background: var(--text, var(--dark, #1a1a1a));
-        color: var(--paper, #fff);
+        background: var(--ink, #1a1a1a);
+        color: var(--on-dark, #fff);
     }
 
     .fp-viewport { overflow: hidden; margin: 0 -16px; padding: 20px 0; }
@@ -281,13 +281,13 @@
     .arrow-circle-glyph { transform: rotate(-45deg); font-weight: bold; display: inline-block; font-size: 0.9rem; }
 
     .fp-empty { padding: 0 16px; }
-    .fp-empty p { color: var(--text-muted, #706e64); }
+    .fp-empty p { color: var(--ink-faint, #706e64); }
 
     .fp-controls { margin-top: 40px; display: flex; justify-content: center; gap: 14px; align-items: center; }
     .fp-controls .slider-arrow {
         background: transparent;
-        border: 1px solid var(--border, rgba(0,0,0,0.15));
-        color: var(--text, var(--dark, #1a1a1a));
+        border: 1px solid var(--line, rgba(0,0,0,0.15));
+        color: var(--ink, #1a1a1a);
         width: 48px;
         height: 48px;
         border-radius: 50%;
@@ -305,33 +305,9 @@
     .fancy-project-card:hover .fancy-meta-inner { transform: translateY(0); }
     .fancy-project-card:hover .fancy-action { opacity: 1; transform: translateY(0); }
     .fp-controls .slider-arrow:hover {
-        background: var(--text, var(--dark, #1a1a1a));
-        color: var(--paper, #fff);
-        border-color: var(--text, var(--dark, #1a1a1a));
-    }
-
-    /* ---- Dark theme override (assumes a [data-theme="dark"] or .dark on <html>/<body>) ---- */
-    [data-theme="dark"] .featured-projects-section,
-    html.dark .featured-projects-section {
-        background: var(--paper-dark, #15140f);
-    }
-    [data-theme="dark"] .fp-title,
-    html.dark .fp-title,
-    [data-theme="dark"] .btn-creative,
-    html.dark .btn-creative,
-    [data-theme="dark"] .fp-controls .slider-arrow,
-    html.dark .fp-controls .slider-arrow {
-        color: var(--text-dark, #f4efe6);
-        border-color: var(--text-dark, #f4efe6);
-    }
-    [data-theme="dark"] .btn-creative:hover,
-    html.dark .btn-creative:hover {
-        background: var(--text-dark, #f4efe6);
-        color: var(--paper-dark, #15140f);
-    }
-    [data-theme="dark"] .fp-empty p,
-    html.dark .fp-empty p {
-        color: var(--text-muted-dark, #a9a48f);
+        background: var(--ink, #1a1a1a);
+        color: var(--on-dark, #fff);
+        border-color: var(--ink, #1a1a1a);
     }
 
     /* Hero spacing / CTA improvements */
@@ -451,10 +427,14 @@
     <div class="wrap">
         <div class="slider" data-slider data-per-view="4">
             <div class="slider-viewport">
-                <div class="slider-track">
+                <div class="slider-track snapshot-track">
                     {% for img in gallery_images %}
-                    <div style="width:calc(25% - 18px); min-width:220px; aspect-ratio:1/1; overflow:hidden; border-radius:10px;">
-                        <img src="{{ img.image.url }}" alt="{{ img.title }}" style="width:100%; height:100%; object-fit:cover;">
+                    <div class="snapshot {% cycle 'tilt-l' 'tilt-r' 'tilt-l' 'tilt-r' %}" style="width:calc(25% - 18px); min-width:220px;">
+                        <div class="snapshot-photo">
+                            <img src="{{ img.image.url }}" alt="{{ img.title }}">
+                        </div>
+                        {% if img.title %}<span class="snapshot-caption">{{ img.title }}</span>{% endif %}
+                        <span class="snapshot-pin"><i class="fa-solid fa-thumbtack"></i></span>
                     </div>
                     {% endfor %}
                 </div>
@@ -480,7 +460,7 @@
                 <div class="slider-track">
                     {% for t in testimonials %}
                     <div class="testimonial-card tilt-card" style="width:calc(50% - 12px); min-width:280px; background:rgba(244,239,230,0.06); border-left-color:var(--accent);">
-                        <p class="quote" style="color:var(--paper);">"{{ t.quote }}"</p>
+                        <p class="quote" style="color:var(--on-dark, #f4efe6);">"{{ t.quote }}"</p>
                         <div class="who">
                             {{ t.client_name }}{% if t.role_or_company %} · {{ t.role_or_company }}{% endif %}
                         </div>

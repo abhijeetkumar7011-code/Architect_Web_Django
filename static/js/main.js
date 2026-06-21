@@ -36,21 +36,46 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Nav background on scroll
     const nav = document.querySelector('.site-nav');
+    let lastY = window.scrollY;
     const onScroll = () => {
-        if (window.scrollY > 40) nav.classList.add('scrolled');
+        const y = window.scrollY;
+        if (y > 40) nav.classList.add('scrolled');
         else nav.classList.remove('scrolled');
+        // Hide on scroll-down, reveal on scroll-up (only past the fold)
+        if (y > lastY && y > 220) nav.classList.add('nav-hidden');
+        else nav.classList.remove('nav-hidden');
+        lastY = y;
     };
-    window.addEventListener('scroll', onScroll);
+    window.addEventListener('scroll', onScroll, { passive: true });
     onScroll();
 
-    // Mobile menu
+    // ---------- Mobile menu ----------
     const toggle = document.querySelector('.nav-toggle');
     const menu = document.querySelector('.mobile-menu');
     const closeBtn = document.querySelector('.close-btn');
+
+    function openMenu() {
+        menu.classList.add('open');
+        toggle.classList.add('active');
+        toggle.setAttribute('aria-expanded', 'true');
+        document.body.classList.add('no-scroll');
+    }
+    function closeMenu() {
+        menu.classList.remove('open');
+        toggle.classList.remove('active');
+        toggle.setAttribute('aria-expanded', 'false');
+        document.body.classList.remove('no-scroll');
+    }
+
     if (toggle && menu) {
-        toggle.addEventListener('click', () => menu.classList.add('open'));
-        closeBtn.addEventListener('click', () => menu.classList.remove('open'));
-        menu.querySelectorAll('a').forEach(a => a.addEventListener('click', () => menu.classList.remove('open')));
+        toggle.addEventListener('click', () => {
+            menu.classList.contains('open') ? closeMenu() : openMenu();
+        });
+        if (closeBtn) closeBtn.addEventListener('click', closeMenu);
+        menu.querySelectorAll('a').forEach(a => a.addEventListener('click', closeMenu));
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && menu.classList.contains('open')) closeMenu();
+        });
     }
 
     // Scroll reveal
@@ -76,7 +101,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Active nav link
     const path = window.location.pathname;
-    document.querySelectorAll('.nav-links a, .mobile-menu a').forEach(a => {
+    document.querySelectorAll('.nav-links a, .mobile-menu-links a').forEach(a => {
         if (a.getAttribute('href') === path) a.classList.add('active');
     });
 
@@ -151,18 +176,29 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // ---------- Tilt effect on premium cards ----------
     document.querySelectorAll('.tilt-card').forEach(card => {
+        if (!card.querySelector('.shine')) {
+            const shine = document.createElement('span');
+            shine.className = 'shine';
+            card.appendChild(shine);
+        }
         card.addEventListener('mousemove', (e) => {
             const rect = card.getBoundingClientRect();
             const x = e.clientX - rect.left;
             const y = e.clientY - rect.top;
-            const rx = ((y / rect.height) - 0.5) * -8;
-            const ry = ((x / rect.width) - 0.5) * 8;
-            card.style.transform = `perspective(900px) rotateX(${rx}deg) rotateY(${ry}deg) translateY(-6px)`;
-            card.style.setProperty('--mx', `${(x / rect.width) * 100}%`);
-            card.style.setProperty('--my', `${(y / rect.height) * 100}%`);
+            const px = x / rect.width;
+            const py = y / rect.height;
+            const rx = (py - 0.5) * -10;
+            const ry = (px - 0.5) * 10;
+            card.style.transform = `perspective(900px) rotateX(${rx}deg) rotateY(${ry}deg) translateY(-8px) scale(1.015)`;
+            card.style.setProperty('--mx', `${px * 100}%`);
+            card.style.setProperty('--my', `${py * 100}%`);
+            const shadowX = (px - 0.5) * 30;
+            const shadowY = (py - 0.5) * 30;
+            card.style.boxShadow = `${-shadowX}px ${20 - shadowY}px 50px rgba(0,0,0,0.28)`;
         });
         card.addEventListener('mouseleave', () => {
-            card.style.transform = 'perspective(900px) rotateX(0) rotateY(0) translateY(0)';
+            card.style.transform = 'perspective(900px) rotateX(0) rotateY(0) translateY(0) scale(1)';
+            card.style.boxShadow = '';
         });
     });
 

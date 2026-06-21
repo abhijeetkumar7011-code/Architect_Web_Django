@@ -5,9 +5,20 @@
     <div class="wrap reveal">
         <span class="eyebrow">Our Work</span>
         <h1 class="h-display" style="margin-top:14px;">Projects</h1>
-        <p class="lede" style="margin-top:16px;">A collection of residential, commercial and urban work, organised by category.</p>
+        <p class="lede" style="margin-top:16px;">A collection of residential, commercial and urban work, organised by category — explore the thinking behind each one.</p>
     </div>
 </header>
+
+<section class="section-dark">
+    <div class="wrap">
+        <div class="stat-band reveal-stagger">
+            <div><div class="num">{{ projects.paginator.count|default:projects|length }}</div><div class="label">Total Projects</div></div>
+            <div><div class="num">{{ categories|length }}</div><div class="label">Categories</div></div>
+            <div><div class="num">{{ studio.cities_count|default:"9" }}</div><div class="label">Cities</div></div>
+            <div><div class="num">{{ studio.awards_count|default:"18" }}</div><div class="label">Awards</div></div>
+        </div>
+    </div>
+</section>
 
 <section>
     <div class="wrap">
@@ -20,14 +31,23 @@
 
         <div class="project-grid reveal-stagger">
             {% for project in projects %}
-            <a href="{{ project.get_absolute_url }}" class="project-card tilt-card">
-                <div class="img-wrap">
-                    <span class="tag">{{ project.get_category_display }}</span>
-                    <img src="{{ project.cover_image.url }}" alt="{{ project.title }}">
+            <a href="{{ project.get_absolute_url }}" class="premium-card tilt-card">
+                <div class="img-wrap" style="aspect-ratio:4/3; position:relative; overflow:hidden;">
+                    <span class="tag" style="position:absolute; top:16px; left:16px; z-index:1;">{{ project.get_category_display }}</span>
+                    <span class="card-index">{{ forloop.counter|stringformat:"02d" }}</span>
+                    <img src="{{ project.cover_image.url }}" alt="{{ project.title }}" style="width:100%; height:100%; object-fit:cover;">
+                    <span class="explore-chip"><i class="fa-solid fa-arrow-up-right-from-square"></i></span>
                 </div>
-                <div class="meta">
-                    <h3>{{ project.title }}</h3>
-                    <span>{{ project.location }}{% if project.year %} · {{ project.year }}{% endif %} <span class="arrow">→</span></span>
+                <div class="body">
+                    <span class="badge">{{ project.location }}{% if project.year %} · {{ project.year }}{% endif %}</span>
+                    <h4 class="h-md title-underline">{{ project.title }}</h4>
+                    <p>{{ project.summary|default:project.description|truncatewords:18 }}</p>
+                    <div class="card-meta-row">
+                        <span>{% if project.area_sqft %}<i class="fa-solid fa-ruler-combined"></i> {{ project.area_sqft }}{% endif %}</span>
+                        <span style="display:inline-flex; align-items:center; gap:8px; font-weight:600; color:var(--accent);">
+                            Explore <span class="arrow">→</span>
+                        </span>
+                    </div>
                 </div>
             </a>
             {% empty %}

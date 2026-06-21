@@ -25,7 +25,7 @@
     <div class="gradient-mesh"><span></span></div>
 
     <nav class="site-nav">
-        <div class="wrap">
+        <div class="wrap nav-inner">
             <a href="{% url 'home' %}" class="brand">{{ studio.name|default:"STUDIO" }}</a>
             <ul class="nav-links">
                 <li><a href="{% url 'home' %}">Home</a></li>
@@ -33,14 +33,14 @@
                 <li><a href="{% url 'service_list' %}">Services</a></li>
                 <li><a href="{% url 'team' %}">Team</a></li>
                 <li><a href="{% url 'about' %}">About</a></li>
-                <li><a href="{% url 'contact' %}">Contact</a></li>
+                <li><a href="{% url 'contact' %}" class="nav-cta">Contact</a></li>
             </ul>
-            <div style="display:flex; align-items:center; gap:18px;">
+            <div class="nav-actions">
                 <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme" title="Toggle theme">
                     <i class="fa-solid fa-sun sun-icon"></i>
                     <i class="fa-solid fa-moon moon-icon"></i>
                 </button>
-                <button class="nav-toggle" aria-label="Open menu">
+                <button class="nav-toggle" aria-label="Open menu" aria-expanded="false">
                     <span></span><span></span><span></span>
                 </button>
             </div>
@@ -48,13 +48,24 @@
     </nav>
 
     <div class="mobile-menu">
-        <span class="close-btn">&times;</span>
-        <a href="{% url 'home' %}">Home</a>
-        <a href="{% url 'project_list' %}">Projects</a>
-        <a href="{% url 'service_list' %}">Services</a>
-        <a href="{% url 'team' %}">Team</a>
-        <a href="{% url 'about' %}">About</a>
-        <a href="{% url 'contact' %}">Contact</a>
+        <button class="close-btn" aria-label="Close menu">&times;</button>
+        <nav class="mobile-menu-links">
+            <a href="{% url 'home' %}" style="--i:0">Home</a>
+            <a href="{% url 'project_list' %}" style="--i:1">Projects</a>
+            <a href="{% url 'service_list' %}" style="--i:2">Services</a>
+            <a href="{% url 'team' %}" style="--i:3">Team</a>
+            <a href="{% url 'about' %}" style="--i:4">About</a>
+            <a href="{% url 'contact' %}" style="--i:5">Contact</a>
+        </nav>
+        <div class="mobile-menu-footer">
+            <span>{{ studio.tagline|default:"Architecture · Interiors · Urban Design" }}</span>
+            <div class="social-row">
+                {% if studio.instagram %}<a href="{{ studio.instagram }}" target="_blank"><i class="fab fa-instagram"></i></a>{% endif %}
+                {% if studio.linkedin %}<a href="{{ studio.linkedin }}" target="_blank"><i class="fab fa-linkedin"></i></a>{% endif %}
+                {% if studio.facebook %}<a href="{{ studio.facebook }}" target="_blank"><i class="fab fa-facebook"></i></a>{% endif %}
+                {% if studio.behance %}<a href="{{ studio.behance }}" target="_blank"><i class="fab fa-behance"></i></a>{% endif %}
+            </div>
+        </div>
     </div>
 
     <main>
