@@ -371,7 +371,7 @@
         <div class="section-head reveal">
             <div>
                 <span class="eyebrow">What We Do</span>
-                <h2 class="h-xl" style="margin-top:14px;">End-to-end design, from first sketch to final handover.</h2>
+                <h2 class="h-xl" style="margin-top:14px;">End-to-end design,<br>from first sketch to final handover.</h2>
             </div>
             <a href="{% url 'service_list' %}" class="btn">All Services</a>
         </div>
@@ -382,7 +382,7 @@
                 <span class="num">{{ forloop.counter|stringformat:"02d" }}</span>
                 <h3>{{ service.title }}</h3>
                 <span class="summary">{{ service.summary }}</span>
-                <span class="arrow">→</span>
+                <span class="arrow">&#x2192;</span>
             </a>
             {% empty %}
             <p>No services added yet.</p>

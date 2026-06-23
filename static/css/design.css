@@ -586,26 +586,129 @@ section { padding: clamp(70px, 10vw, 130px) 0; }
 
 /* ---------- Services ---------- */
 .service-list { border-top: 1px solid var(--line); }
+
 .service-row {
     display: grid;
-    grid-template-columns: 80px 1fr 220px 40px;
+    grid-template-columns: 80px 1fr 220px 52px;
     align-items: center;
     gap: 24px;
-    padding: 34px 0;
+    padding: 36px 20px;
     border-bottom: 1px solid var(--line);
-    transition: background 0.3s var(--ease);
     position: relative;
+    overflow: hidden;
+    cursor: pointer;
+    transition: padding-left 0.45s var(--ease), border-color 0.3s;
+    text-decoration: none;
+    color: inherit;
 }
-.service-row:hover { background: var(--paper-soft); }
-.service-row .num { font-family: var(--font-display); color: var(--ink-faint); font-size: 1.1rem; }
-.service-row h3 { font-size: 1.6rem; transition: color 0.3s; }
-.service-row:hover h3 { color: var(--accent); }
-.service-row .summary { color: var(--ink-soft); font-size: 0.95rem; }
-.service-row .arrow { justify-self: end; font-size: 1.4rem; transition: transform 0.3s var(--ease); }
-.service-row:hover .arrow { transform: translateX(6px) rotate(0deg); }
+
+/* Glowing left bar — slides in on hover */
+.service-row::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 3px;
+    background: linear-gradient(180deg, var(--accent), var(--accent-2, #8a6dd8));
+    transform: scaleY(0);
+    transform-origin: bottom;
+    transition: transform 0.45s var(--ease);
+    border-radius: 0 2px 2px 0;
+}
+
+/* Warm glow wash behind the row */
+.service-row::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+        100deg,
+        var(--accent-soft) 0%,
+        transparent 60%
+    );
+    opacity: 0;
+    transition: opacity 0.45s var(--ease);
+    pointer-events: none;
+}
+
+.service-row:hover {
+    padding-left: 28px;
+    border-color: transparent;
+}
+
+.service-row:hover::before { transform: scaleY(1); }
+.service-row:hover::after  { opacity: 1; }
+
+/* Number */
+.service-row .num {
+    font-family: var(--font-display);
+    color: var(--ink-faint);
+    font-size: 1.05rem;
+    transition: color 0.35s var(--ease), transform 0.35s var(--ease);
+    position: relative;
+    z-index: 1;
+}
+.service-row:hover .num {
+    color: var(--accent);
+    transform: translateY(-3px);
+}
+
+/* Title */
+.service-row h3 {
+    font-size: 1.65rem;
+    transition: color 0.35s var(--ease), letter-spacing 0.35s var(--ease);
+    position: relative;
+    z-index: 1;
+}
+.service-row:hover h3 {
+    color: var(--accent);
+    letter-spacing: 0.01em;
+}
+
+/* Summary */
+.service-row .summary {
+    color: var(--ink-soft);
+    font-size: 0.92rem;
+    line-height: 1.55;
+    transition: color 0.35s var(--ease), transform 0.35s var(--ease);
+    position: relative;
+    z-index: 1;
+}
+.service-row:hover .summary {
+    color: var(--ink);
+    transform: translateX(4px);
+}
+
+/* Arrow — morphs into a longer arrow on hover */
+.service-row .arrow {
+    justify-self: end;
+    font-size: 1.3rem;
+    width: 40px;
+    height: 40px;
+    border: 1.5px solid var(--line);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition:
+        background 0.35s var(--ease),
+        border-color 0.35s var(--ease),
+        transform 0.45s var(--ease);
+    position: relative;
+    z-index: 1;
+}
+.service-row:hover .arrow {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: #fff;
+    transform: translateX(4px) rotate(-45deg);
+}
+
 @media (max-width: 700px) {
-    .service-row { grid-template-columns: 40px 1fr 30px; }
+    .service-row { grid-template-columns: 40px 1fr 44px; padding: 28px 12px; }
     .service-row .summary { display: none; }
+    .service-row:hover { padding-left: 20px; }
 }
 
 /* ---------- Stats / Expertise cards ---------- */
