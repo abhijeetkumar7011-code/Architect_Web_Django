@@ -1215,6 +1215,7 @@ section { padding: clamp(70px, 10vw, 130px) 0; }
 /* ---------- Process / timeline ---------- */
 .process-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 30px; }
 @media (max-width: 900px) { .process-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 600px) { .process-grid { grid-template-columns: 1fr; gap: 20px; } }
 .process-step { padding: 30px; border: 1px solid var(--line); border-radius: var(--card-radius); position: relative; transition: border-color 0.3s, transform 0.3s var(--ease); }
 .process-step:hover { border-color: var(--accent); transform: translateY(-6px); }
 .process-step .step-num { font-family: var(--font-display); font-size: 2.4rem; color: var(--accent-soft); -webkit-text-stroke: 1px var(--accent); color: transparent; }
@@ -1333,3 +1334,147 @@ section { padding: clamp(70px, 10vw, 130px) 0; }
 @media (max-width: 760px) {
     .snapshot:nth-child(2n), .snapshot:nth-child(3n) { margin-top: 0; }
 }
+/* ==========================================================================
+   SERVICES — fancy index rows, icon medallion, sticky split, hero number
+   ========================================================================== */
+
+/* Big interactive service rows on the list page (hover reveals a live
+   preview image that follows the cursor + a glowing index numeral) */
+.service-feature-row {
+    position: relative;
+    display: grid;
+    grid-template-columns: 90px 1fr auto;
+    align-items: center;
+    gap: 28px;
+    padding: 36px 8px;
+    border-bottom: 1px solid var(--line);
+    text-decoration: none;
+    color: var(--ink);
+    overflow: hidden;
+    transition: padding-left 0.4s var(--ease);
+}
+.service-feature-row:first-child { border-top: 1px solid var(--line); }
+.service-feature-row:hover { padding-left: 22px; }
+.service-feature-row .sfr-num {
+    font-family: var(--font-display);
+    font-size: 1.05rem;
+    color: var(--ink-faint);
+    transition: color 0.35s var(--ease);
+}
+.service-feature-row:hover .sfr-num { color: var(--accent); }
+.service-feature-row .sfr-title {
+    font-family: var(--font-display);
+    font-size: clamp(1.5rem, 3vw, 2.3rem);
+    transition: transform 0.4s var(--ease), color 0.35s var(--ease);
+    position: relative;
+    z-index: 2;
+}
+.service-feature-row:hover .sfr-title { transform: translateX(8px); color: var(--accent); }
+.service-feature-row .sfr-summary {
+    display: block;
+    font-size: 0.85rem;
+    color: var(--ink-faint);
+    margin-top: 6px;
+    max-width: 480px;
+    font-family: var(--font-body);
+}
+.service-feature-row .sfr-arrow {
+    width: 48px; height: 48px;
+    border-radius: 50%;
+    border: 1px solid var(--line);
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.4s var(--ease);
+    flex-shrink: 0;
+}
+.service-feature-row:hover .sfr-arrow {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: #fff;
+    transform: rotate(45deg);
+}
+/* Floating thumbnail preview that tracks the cursor on hover */
+.sfr-preview {
+    position: absolute;
+    top: 50%; left: 60%;
+    width: 220px; height: 150px;
+    border-radius: 12px;
+    overflow: hidden;
+    pointer-events: none;
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.85) rotate(-4deg);
+    transition: opacity 0.35s var(--ease), transform 0.35s var(--ease);
+    z-index: 1;
+    box-shadow: var(--shadow-soft);
+}
+.sfr-preview img { width: 100%; height: 100%; object-fit: cover; }
+.service-feature-row:hover .sfr-preview { opacity: 1; transform: translate(-50%, -50%) scale(1) rotate(-2deg); }
+@media (max-width: 760px) {
+    .service-feature-row { grid-template-columns: 50px 1fr auto; padding: 26px 4px; }
+    .sfr-preview { display: none; }
+}
+
+/* Icon medallion used on service cards / detail page */
+.icon-medallion {
+    width: 56px; height: 56px;
+    border-radius: 50%;
+    background: var(--accent-soft);
+    display: flex; align-items: center; justify-content: center;
+    color: var(--accent);
+    font-size: 1.3rem;
+    margin-bottom: 18px;
+    overflow: hidden;
+}
+.icon-medallion img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
+
+/* Giant translucent index numeral, used as a decorative watermark */
+.ghost-index {
+    font-family: var(--font-display);
+    font-size: clamp(5rem, 14vw, 11rem);
+    line-height: 1;
+    color: transparent;
+    -webkit-text-stroke: 1px var(--line);
+    position: absolute;
+    top: -10px; right: 0;
+    z-index: 0;
+    pointer-events: none;
+    user-select: none;
+}
+
+/* Sticky split layout on the service detail page */
+.service-split {
+    display: grid;
+    grid-template-columns: 1fr 1.15fr;
+    gap: 70px;
+    align-items: start;
+}
+.service-split .sticky-visual { position: sticky; top: 110px; }
+.service-split .sticky-visual img {
+    width: 100%;
+    aspect-ratio: 4/5;
+    object-fit: cover;
+    border-radius: var(--card-radius);
+}
+@media (max-width: 900px) {
+    .service-split { grid-template-columns: 1fr; gap: 36px; }
+    .service-split .sticky-visual { position: static; }
+}
+
+/* Included / what-you-get checklist */
+.included-list { list-style: none; padding: 0; margin: 28px 0 0; display: grid; gap: 16px; }
+.included-list li {
+    display: flex; align-items: flex-start; gap: 14px;
+    font-size: 0.95rem; color: var(--ink-soft);
+}
+.included-list li i {
+    margin-top: 3px;
+    width: 26px; height: 26px; flex-shrink: 0;
+    border-radius: 50%;
+    background: var(--accent-soft);
+    color: var(--accent);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.72rem;
+}
+
+/* Service detail hero badge row */
+.service-hero-meta { display: flex; gap: 14px; flex-wrap: wrap; margin-top: 26px; }
+.service-hero-meta .filter-pill { cursor: default; }

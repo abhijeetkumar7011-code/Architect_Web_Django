@@ -1,23 +1,30 @@
 {% extends 'core/base.html' %}
 {% block content %}
 
-<header class="page-header">
-    <div class="wrap reveal">
+<header class="page-header" style="position:relative; overflow:hidden;">
+    <div class="wrap reveal" style="position:relative; z-index:1;">
         <span class="eyebrow">Capabilities</span>
-        <h1 class="h-display" style="margin-top:14px;">Services</h1>
-        <p class="lede" style="margin-top:16px;">From early concept to construction supervision — what we bring to every project, across every typology we work with.</p>
+        <h1 class="h-display" style="margin-top:14px;">What We Do</h1>
+        <p class="lede" style="margin-top:16px; max-width:620px;">From the first sketch to the final handover key — every service we offer, built to carry a project from idea to occupied space.</p>
     </div>
 </header>
 
-<section>
+<!-- INTERACTIVE SERVICE INDEX -->
+<section style="position:relative;">
     <div class="wrap">
-        <div class="service-list reveal-stagger">
+        <span class="eyebrow reveal">{{ services|length }} Core Services</span>
+        <div class="reveal-stagger" style="margin-top:30px;">
             {% for service in services %}
-            <a href="{{ service.get_absolute_url }}" class="service-row">
-                <span class="num">{{ forloop.counter|stringformat:"02d" }}</span>
-                <h3>{{ service.title }}</h3>
-                <span class="summary">{{ service.summary }}</span>
-                <span class="arrow">→</span>
+            <a href="{{ service.get_absolute_url }}" class="service-feature-row reveal">
+                <span class="sfr-num">{{ forloop.counter|stringformat:"02d" }}</span>
+                <span>
+                    <span class="sfr-title">{{ service.title }}</span>
+                    <span class="sfr-summary">{{ service.summary }}</span>
+                </span>
+                <span class="sfr-arrow"><i class="fa-solid fa-arrow-right"></i></span>
+                {% if service.cover_image %}
+                <span class="sfr-preview"><img src="{{ service.cover_image.url }}" alt="{{ service.title }}" loading="lazy" decoding="async"></span>
+                {% endif %}
             </a>
             {% empty %}
             <p>No services added yet.</p>
@@ -26,21 +33,36 @@
     </div>
 </section>
 
-<!-- SERVICE CARDS -->
-<section class="section-soft">
+<!-- SERVICE CARDS, A CLOSER LOOK -->
+<section class="section-soft" style="position:relative; overflow:hidden;">
     <div class="wrap">
         <span class="eyebrow reveal">A Closer Look</span>
         <h2 class="h-xl reveal" style="margin:14px 0 50px; max-width:600px;">Each service, in detail.</h2>
         <div class="project-grid reveal-stagger">
             {% for service in services %}
             <a href="{{ service.get_absolute_url }}" class="premium-card tilt-card">
-                <div class="img-wrap" style="aspect-ratio:4/3;">
-                    {% if service.cover_image %}<img src="{{ service.cover_image.url }}" alt="{{ service.title }}" style="width:100%; height:100%; object-fit:cover;" loading="lazy" decoding="async">{% endif %}
+                <div class="img-wrap" style="aspect-ratio:4/3; position:relative; overflow:hidden;">
+                    <span class="card-index">{{ forloop.counter|stringformat:"02d" }}</span>
+                    {% if service.cover_image %}
+                    <img src="{{ service.cover_image.url }}" alt="{{ service.title }}" style="width:100%; height:100%; object-fit:cover;" loading="lazy" decoding="async">
+                    {% endif %}
+                    <span class="explore-chip"><i class="fa-solid fa-arrow-up-right-from-square"></i></span>
                 </div>
                 <div class="body">
+                    {% if service.icon %}
+                    <div class="icon-medallion"><img src="{{ service.icon.url }}" alt=""></div>
+                    {% else %}
+                    <div class="icon-medallion"><i class="fa-solid fa-compass-drafting"></i></div>
+                    {% endif %}
                     <span class="badge">Service {{ forloop.counter|stringformat:"02d" }}</span>
-                    <h4 class="h-md">{{ service.title }}</h4>
+                    <h4 class="h-md title-underline">{{ service.title }}</h4>
                     <p>{{ service.summary }}</p>
+                    <div class="card-meta-row">
+                        <span>Full scope, end to end</span>
+                        <span style="display:inline-flex; align-items:center; gap:8px; font-weight:600; color:var(--accent);">
+                            Explore <span class="arrow">→</span>
+                        </span>
+                    </div>
                 </div>
             </a>
             {% endfor %}
@@ -58,6 +80,18 @@
             <div class="process-step"><div class="step-num">02</div><h4>Concept Design</h4><p>Initial sketches and massing studies presented for feedback.</p></div>
             <div class="process-step"><div class="step-num">03</div><h4>Detailed Drawings</h4><p>Structural, electrical and material drawings finalized for execution.</p></div>
             <div class="process-step"><div class="step-num">04</div><h4>Execution Support</h4><p>Site visits and contractor coordination through to handover.</p></div>
+        </div>
+    </div>
+</section>
+
+<!-- STATS -->
+<section class="section-dark">
+    <div class="wrap">
+        <div class="stat-band reveal-stagger">
+            <div><div class="num">{{ services|length }}</div><div class="label">Core Services</div></div>
+            <div><div class="num">{{ studio.years_active|default:"12" }}+</div><div class="label">Years Active</div></div>
+            <div><div class="num">{{ studio.cities_count|default:"9" }}</div><div class="label">Cities Served</div></div>
+            <div><div class="num">{{ studio.awards_count|default:"18" }}</div><div class="label">Awards</div></div>
         </div>
     </div>
 </section>

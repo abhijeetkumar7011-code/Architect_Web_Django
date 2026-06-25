@@ -81,6 +81,7 @@ class ServiceDetailView(DetailView):
         ctx = super().get_context_data(**kwargs)
         ctx['studio'] = get_studio_info()
         ctx['related_projects'] = self.object.projects.all()[:4]
+        ctx['next_service'] = Service.objects.exclude(pk=self.object.pk).order_by('?').first()
         return ctx
 
 
