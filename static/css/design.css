@@ -838,9 +838,15 @@ section { padding: clamp(70px, 10vw, 130px) 0; }
     border-radius: 14px;
     background: linear-gradient(180deg, var(--paper-soft), var(--paper));
     border: 1px solid var(--line);
-    transition: transform 0.25s var(--ease), box-shadow 0.25s var(--ease);
+    transition: transform 0.4s var(--ease), box-shadow 0.4s var(--ease);
     transform-style: preserve-3d;
     will-change: transform;
+}
+/* While the pointer is actively moving over the card, kill the transition
+   so the tilt tracks the cursor 1:1 instead of lagging behind it. The
+   transition comes back on mouseleave for a smooth settle. */
+.tilt-card.tilting {
+    transition: none;
 }
 .tilt-card::before {
     content: "";

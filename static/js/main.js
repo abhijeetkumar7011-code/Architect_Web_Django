@@ -1,12 +1,20 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // ---------- Cursor glow ----------
+    // ---------- Cursor glow (throttled with rAF) ----------
     const glow = document.querySelector('.cursor-glow');
     if (glow) {
+        let glowX = 0, glowY = 0, glowTicking = false;
         window.addEventListener('mousemove', (e) => {
-            glow.style.left = e.clientX + 'px';
-            glow.style.top = e.clientY + 'px';
+            glowX = e.clientX;
+            glowY = e.clientY;
             glow.classList.add('active');
-        });
+            if (!glowTicking) {
+                glowTicking = true;
+                requestAnimationFrame(() => {
+                    glow.style.transform = `translate(${glowX}px, ${glowY}px) translate(-50%, -50%)`;
+                    glowTicking = false;
+                });
+            }
+        }, { passive: true });
         document.addEventListener('mouseleave', () => glow.classList.remove('active'));
     }
 
@@ -19,9 +27,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (!isOpen) item.classList.add('open');
         });
     });
-});
 
-document.addEventListener('DOMContentLoaded', () => {
     // ---------- Theme toggle ----------
     const themeBtn = document.getElementById('themeToggle');
     if (themeBtn) {
@@ -34,20 +40,28 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Nav background on scroll
+    // ---------- Nav background on scroll (throttled with rAF) ----------
     const nav = document.querySelector('.site-nav');
-    let lastY = window.scrollY;
-    const onScroll = () => {
-        const y = window.scrollY;
-        if (y > 40) nav.classList.add('scrolled');
-        else nav.classList.remove('scrolled');
-        // Hide on scroll-down, reveal on scroll-up (only past the fold)
-        if (y > lastY && y > 220) nav.classList.add('nav-hidden');
-        else nav.classList.remove('nav-hidden');
-        lastY = y;
-    };
-    window.addEventListener('scroll', onScroll, { passive: true });
-    onScroll();
+    if (nav) {
+        let lastY = window.scrollY;
+        let scrollTicking = false;
+        const onScroll = () => {
+            const y = window.scrollY;
+            if (y > 40) nav.classList.add('scrolled');
+            else nav.classList.remove('scrolled');
+            if (y > lastY && y > 220) nav.classList.add('nav-hidden');
+            else nav.classList.remove('nav-hidden');
+            lastY = y;
+            scrollTicking = false;
+        };
+        window.addEventListener('scroll', () => {
+            if (!scrollTicking) {
+                scrollTicking = true;
+                requestAnimationFrame(onScroll);
+            }
+        }, { passive: true });
+        onScroll();
+    }
 
     // ---------- Mobile menu ----------
     const toggle = document.querySelector('.nav-toggle');
@@ -78,7 +92,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Scroll reveal
+    // ---------- Scroll reveal ----------
     const revealEls = document.querySelectorAll('.reveal');
     const io = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
@@ -99,7 +113,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // Active nav link
+    // ---------- Active nav link ----------
     const path = window.location.pathname;
     document.querySelectorAll('.nav-links a, .mobile-menu-links a').forEach(a => {
         if (a.getAttribute('href') === path) a.classList.add('active');
@@ -124,7 +138,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const max = Math.max(0, slides.length - vc);
             index = Math.min(index, max);
             const pct = (100 / vc) * index;
-            track.style.transform = `translateX(-${pct}%)`;
+            track.style.transform = `translate3d(-${pct}%, 0, 0)`;
             if (dotsWrap) {
                 dotsWrap.querySelectorAll('.dot').forEach((d, i) => d.classList.toggle('active', i === index));
             }
@@ -171,45 +185,71 @@ document.addEventListener('DOMContentLoaded', () => {
         slider.addEventListener('mouseleave', startAuto);
         startAuto();
 
-        window.addEventListener('resize', () => { buildDots(); update(); });
+        let resizeTimer = null;
+        window.addEventListener('resize', () => {
+            clearTimeout(resizeTimer);
+            resizeTimer = setTimeout(() => { buildDots(); update(); }, 120);
+        });
     });
 
-    // ---------- Tilt effect on premium cards ----------
+    // ---------- Tilt effect on premium cards (rAF-throttled, transform-only) ----------
     document.querySelectorAll('.tilt-card').forEach(card => {
         if (!card.querySelector('.shine')) {
             const shine = document.createElement('span');
             shine.className = 'shine';
             card.appendChild(shine);
         }
-        card.addEventListener('mousemove', (e) => {
+
+        let pendingX = 0, pendingY = 0, ticking = false;
+
+        function applyTilt() {
             const rect = card.getBoundingClientRect();
-            const x = e.clientX - rect.left;
-            const y = e.clientY - rect.top;
-            const px = x / rect.width;
-            const py = y / rect.height;
+            const px = pendingX / rect.width;
+            const py = pendingY / rect.height;
             const rx = (py - 0.5) * -10;
             const ry = (px - 0.5) * 10;
             card.style.transform = `perspective(900px) rotateX(${rx}deg) rotateY(${ry}deg) translateY(-8px) scale(1.015)`;
             card.style.setProperty('--mx', `${px * 100}%`);
             card.style.setProperty('--my', `${py * 100}%`);
-            const shadowX = (px - 0.5) * 30;
-            const shadowY = (py - 0.5) * 30;
-            card.style.boxShadow = `${-shadowX}px ${20 - shadowY}px 50px rgba(0,0,0,0.28)`;
-        });
+            ticking = false;
+        }
+
+        card.addEventListener('mousemove', (e) => {
+            const rect = card.getBoundingClientRect();
+            pendingX = e.clientX - rect.left;
+            pendingY = e.clientY - rect.top;
+            card.classList.add('tilting');
+            if (!ticking) {
+                ticking = true;
+                requestAnimationFrame(applyTilt);
+            }
+        }, { passive: true });
+
         card.addEventListener('mouseleave', () => {
+            card.classList.remove('tilting');
             card.style.transform = 'perspective(900px) rotateX(0) rotateY(0) translateY(0) scale(1)';
-            card.style.boxShadow = '';
         });
     });
 
-    // ---------- Magnetic buttons ----------
+    // ---------- Magnetic buttons (rAF-throttled) ----------
     document.querySelectorAll('.btn-magnetic').forEach(btn => {
+        let pendingX = 0, pendingY = 0, ticking = false;
+
+        function applyMagnet() {
+            btn.style.transform = `translate3d(${pendingX * 0.18}px, ${pendingY * 0.3}px, 0)`;
+            ticking = false;
+        }
+
         btn.addEventListener('mousemove', (e) => {
             const r = btn.getBoundingClientRect();
-            const x = e.clientX - r.left - r.width / 2;
-            const y = e.clientY - r.top - r.height / 2;
-            btn.style.transform = `translate(${x * 0.18}px, ${y * 0.3}px)`;
-        });
-        btn.addEventListener('mouseleave', () => { btn.style.transform = 'translate(0,0)'; });
+            pendingX = e.clientX - r.left - r.width / 2;
+            pendingY = e.clientY - r.top - r.height / 2;
+            if (!ticking) {
+                ticking = true;
+                requestAnimationFrame(applyMagnet);
+            }
+        }, { passive: true });
+
+        btn.addEventListener('mouseleave', () => { btn.style.transform = 'translate3d(0,0,0)'; });
     });
 });

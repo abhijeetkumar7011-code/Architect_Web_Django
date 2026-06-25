@@ -15,7 +15,7 @@
             {% for member in team_members %}
             <div class="team-card tilt-card" style="padding:18px;">
                 <div class="photo">
-                    {% if member.photo %}<img src="{{ member.photo.url }}" alt="{{ member.name }}">{% endif %}
+                    {% if member.photo %}<img src="{{ member.photo.url }}" alt="{{ member.name }}" loading="lazy" decoding="async">{% endif %}
                 </div>
                 <h4>{{ member.name }}</h4>
                 <div class="role">{{ member.role }}</div>

@@ -41,7 +41,7 @@
                     <div class="slider-track">
                         {% for img in project.gallery.all %}
                         <div style="width:calc(50% - 12px); min-width:280px;">
-                            <img src="{{ img.image.url }}" alt="{{ img.caption }}" style="width:100%; aspect-ratio:4/3; object-fit:cover; border-radius:10px;">
+                            <img src="{{ img.image.url }}" alt="{{ img.caption }}" style="width:100%; aspect-ratio:4/3; object-fit:cover; border-radius:10px;" loading="lazy" decoding="async">
                             {% if img.caption %}<p style="font-size:0.85rem; margin-top:10px;">{{ img.caption }}</p>{% endif %}
                         </div>
                         {% endfor %}

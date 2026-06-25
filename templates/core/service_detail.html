@@ -17,7 +17,7 @@
         </div>
         {% if service.cover_image %}
         <div class="reveal">
-            <img src="{{ service.cover_image.url }}" alt="{{ service.title }}" style="width:100%; aspect-ratio:4/3; object-fit:cover;">
+            <img src="{{ service.cover_image.url }}" alt="{{ service.title }}" style="width:100%; aspect-ratio:4/3; object-fit:cover;" loading="lazy" decoding="async">
         </div>
         {% endif %}
     </div>
@@ -29,7 +29,7 @@
             {% for project in related_projects %}
             <a href="{{ project.get_absolute_url }}" class="project-card tilt-card">
                 <div class="img-wrap">
-                    <img src="{{ project.cover_image.url }}" alt="{{ project.title }}">
+                    <img src="{{ project.cover_image.url }}" alt="{{ project.title }}" loading="lazy" decoding="async">
                 </div>
                 <div class="meta"><h3>{{ project.title }}</h3><span>{{ project.location }}</span></div>
             </a>

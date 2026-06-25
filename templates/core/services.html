@@ -35,7 +35,7 @@
             {% for service in services %}
             <a href="{{ service.get_absolute_url }}" class="premium-card tilt-card">
                 <div class="img-wrap" style="aspect-ratio:4/3;">
-                    {% if service.cover_image %}<img src="{{ service.cover_image.url }}" alt="{{ service.title }}" style="width:100%; height:100%; object-fit:cover;">{% endif %}
+                    {% if service.cover_image %}<img src="{{ service.cover_image.url }}" alt="{{ service.title }}" style="width:100%; height:100%; object-fit:cover;" loading="lazy" decoding="async">{% endif %}
                 </div>
                 <div class="body">
                     <span class="badge">Service {{ forloop.counter|stringformat:"02d" }}</span>

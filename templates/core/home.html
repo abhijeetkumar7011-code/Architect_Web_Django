@@ -77,7 +77,7 @@
                         <a href="{{ project.get_absolute_url }}" class="fancy-project-card">
                             <div class="img-container">
                                 <div class="card-overlay"></div>
-                                <img src="{{ project.cover_image.url }}" alt="{{ project.title }}">
+                                <img src="{{ project.cover_image.url }}" alt="{{ project.title }}" loading="lazy" decoding="async">
                             </div>
 
                             <span class="fancy-tag">{{ project.get_category_display }}</span>
@@ -431,7 +431,7 @@
                     {% for img in gallery_images %}
                     <div class="snapshot {% cycle 'tilt-l' 'tilt-r' 'tilt-l' 'tilt-r' %}" style="width:calc(25% - 18px); min-width:220px;">
                         <div class="snapshot-photo">
-                            <img src="{{ img.image.url }}" alt="{{ img.title }}">
+                            <img src="{{ img.image.url }}" alt="{{ img.title }}" loading="lazy" decoding="async">
                         </div>
                         {% if img.title %}<span class="snapshot-caption">{{ img.title }}</span>{% endif %}
                         <span class="snapshot-pin"><i class="fa-solid fa-thumbtack"></i></span>
